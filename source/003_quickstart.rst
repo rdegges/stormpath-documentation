@@ -4,9 +4,21 @@
 3. Quickstart
 *************
 
-This quickstart will get you up and running with Stormpath in about 7 minutes and give you a good initial feel for the Stormpath REST API.
+.. only:: not (csharp or vbnet)
 
-These instructions assume that you have `cURL <http://curl.haxx.se/download.html>`_ installed on your system and that you have already completed the steps in the :ref:`Set-up chapter<set-up>`, and now have:
+    This quickstart will get you up and running with Stormpath in about 7 minutes and give you a good initial feel for the Stormpath REST API.
+
+.. only:: csharp or vbnet
+
+    This quickstart will get you up and running with Stormpath in about 7 minutes and give you a good initial feel for the Stormpath .NET SDK.
+
+.. only:: not (csharp or vbnet)
+
+    These instructions assume that you have `cURL <http://curl.haxx.se/download.html>`_ installed on your system and that you have already completed the steps in the :ref:`Set-up chapter<set-up>`, and now have:
+
+.. only:: csharp or vbnet
+
+    These instructions assume that you have Visual Studio installed on your system and that you have already completed the steps in the :ref:`Set-up chapter<set-up>`, and now have:
 
 - A Stormpath account
 
@@ -28,6 +40,16 @@ During this quickstart, you will do the following:
 
 Stormpath also can do a lot more (like :ref:`Groups <group-mgmt>`, :ref:`Multitenancy <multitenancy>`, and :ref:`Social Integration <social-authn>`) which you can learn more about later in this guide.
 
+.. only:: csharp or vbnet
+
+    Installing the SDK
+    ------------------
+
+    To set up your environment for this quickstart, follow these steps:
+
+    1. Create a new Console Application project in Visual Studio.
+    2. Install the Stormpath .NET SDK by running :code:`install-package Stormpath.SDK` in the Package Manager Console. If you prefer, you can also use the NuGet Package Manager to install the Stormpath.SDK package.
+
 Let's get started!
 
 3.1. Retrieve Your Application
@@ -35,14 +57,38 @@ Let's get started!
 
 Before you can create user Accounts you'll need to retrieve your Stormpath Application. An Application in Stormpath represents the project that you are working on. This means that, if you're building a web app named "Lightsabers Galore", you'd want to name your Stormpath Application "Lightsabers Galore" as well. By default, your Stormpath Tenant will have an Application already created for you to use. We will use this Application, named "My Application", for the quickstart.
 
-In our examples below we will use the mock API Key from the :ref:`First Time Set-Up <set-up>` chapter. You should replace this mock Key with your own, valid key::
+.. only:: not (csharp or vbnet)
 
-  apiKey.id = 144JVZINOF5EBNCMG9EXAMPLE
-  apiKey.secret = lWxOiKqKPNwJmSldbiSkEbkNjgh2uRSNAb+AEXAMPLE
+    In our examples below we will use the mock API Key from the :ref:`First Time Set-Up <set-up>` chapter. You should replace this mock Key with your own, valid key::
 
-Before you can get your Application, you must get the location of your Tenant from Stormpath, like so:
+        apiKey.id = 144JVZINOF5EBNCMG9EXAMPLE
+        apiKey.secret = lWxOiKqKPNwJmSldbiSkEbkNjgh2uRSNAb+AEXAMPLE
 
-.. only:: rest 
+.. only:: csharp or vbnet
+
+    The first thing you need to connect to the Stormpath API is an ``IClient`` object:
+
+    .. only:: csharp
+
+        .. literalinclude:: code/csharp/quickstart/initialize_client.cs
+            :language: csharp
+
+    .. only:: vbnet
+
+        .. literalinclude:: code/vbnet/quickstart/initialize_client.vb
+            :language: vbnet
+
+    .. note::
+
+        You can skip building the ``IClientApiKey`` object and the call to ``SetApiKey()`` if you store your API Key and Secret in environment variables, or put the ``apiKey.properties`` file in the default location (``~\.stormpath\apiKey.properties``). Calling ``IClientBuilder.Build()`` without specifying an API Key will check the default location.
+
+    Once you have an ``IClient`` instance, keep it around! You should only create it **once** per application. It's thread-safe, so you can safely reuse it, even in an ASP.NET application.
+
+.. only:: not (csharp or vbnet)
+
+    Before you can get your Application, you must get the location of your Tenant from Stormpath, like so:
+
+.. only:: rest
 
   .. code-block:: bash
 
@@ -58,10 +104,10 @@ Before you can get your Application, you must get the location of your Tenant fr
 
   The above cURL command returns an empty body along with a header:
 
-  .. code-block:: http 
+  .. code-block:: http
     :emphasize-lines: 2
-      
-      HTTP/1.1 302 Found 
+
+      HTTP/1.1 302 Found
       Location: https://api.stormpath.com/v1/tenants/yOuRTeNANtid
       Content-Length: 0
 
@@ -95,7 +141,7 @@ Before you can get your Application, you must get the location of your Tenant fr
       "tenant":{
         "href":"https://api.stormpath.com/v1/tenants/1gBTncWsp2ObQGgDn9R91R"
       },
-      "comment":" // This JSON has been truncated for readability", 
+      "comment":" // This JSON has been truncated for readability",
       "accounts":{
         "href":"https://api.stormpath.com/v1/applications/1gk4Dxzi6o4PbdlEXampLE/accounts"
       },
@@ -123,10 +169,20 @@ Before you can get your Application, you must get the location of your Tenant fr
   .. literalinclude:: code/java/quickstart/retrieve_your_application
       :language: java
 
-.. only:: dotnet
+.. only:: csharp or vbnet
 
-  .. literalinclude:: code/dotnet/quickstart/retrieve_your_application
-      :language: csharp
+    Next, use the ``GetApplications()`` collection to search for the "My Application" Application:
+
+    .. only:: csharp
+
+        .. literalinclude:: code/csharp/quickstart/retrieve_your_application.cs
+            :language: csharp
+
+    .. note::
+
+        ``GetApplications()`` returns an ``IAsyncQueryable``, which represents a Stormpath collection resource that can be queried using LINQ-to-Stormpath. No network request is made to the Stormpath API until you call a method that enumerates the collection, such as ``SingleAsync()`` or ``ToListAsync()``.
+
+    ``myApp`` is an ``IApplication`` object, which represents a Stormpath Application resource as a .NET type. We'll use this object to create a new user Account and then authenticate it.
 
 .. only:: python
 
@@ -142,9 +198,9 @@ Before you can get your Application, you must get the location of your Tenant fr
 3.2. Create a User Account
 ==========================
 
-Now that we've created an Application, let's create a user Account so someone can log in to (i.e. authenticate with) the Application. 
+Now that we've created an Application, let's create a user Account so someone can log in to (i.e. authenticate with) the Application.
 
-.. only:: rest 
+.. only:: rest
 
   .. code-block:: bash
 
@@ -162,7 +218,7 @@ Now that we've created an Application, let's create a user Account so someone ca
 
   This would return this response:
 
-  .. code-block:: json  
+  .. code-block:: json
 
     {
       "href": "https://api.stormpath.com/v1/accounts/2wufAnDszC3PRi9exAMple",
@@ -193,9 +249,9 @@ Now that we've created an Application, let's create a user Account so someone ca
 
   You'll notice here that this user Account has a Directory ``href`` returned as well, even though you haven't created one. This is because when you created an Application, Stormpath automatically created a new Directory as well.
 
-.. only:: php 
+.. only:: php
 
-  .. literalinclude:: code/php/quickstart/create_an_account 
+  .. literalinclude:: code/php/quickstart/create_an_account
      :language: php
 
 .. only:: java
@@ -203,27 +259,31 @@ Now that we've created an Application, let's create a user Account so someone ca
   .. literalinclude:: code/java/quickstart/create_an_account
       :language: java
 
-.. only:: dotnet
+.. only:: csharp or vbnet
 
-  .. literalinclude:: code/dotnet/quickstart/create_an_account 
-      :language: csharp
+    .. only:: csharp
+
+        .. literalinclude:: code/csharp/quickstart/create_an_account.cs
+            :language: csharp
+
+    ``CreateAccountAsync()`` sends a request to Stormpath and returns an ``IAccount`` (after being awaited). Like ``IApplication``, ``IAccount`` is the .NET type that represents a Stormpath Account resource.
 
 .. only:: python
 
-  .. literalinclude:: code/python/quickstart/create_an_account 
+  .. literalinclude:: code/python/quickstart/create_an_account
       :language: python
 
 .. only:: nodejs
 
-  .. literalinclude:: code/nodejs/quickstart/create_an_account 
+  .. literalinclude:: code/nodejs/quickstart/create_an_account
       :language: javascript
-     
-3.3 Authenticate a User Account
-===============================
 
-Now we have a user Account that can use your Application. But how do you authenticate an Account logging in to the Application? 
+3.3. Authenticate a User Account
+================================
 
-.. only:: rest 
+Now we have a user Account that can use your Application. But how do you authenticate an Account logging in to the Application?
+
+.. only:: rest
 
   You POST a "Login Attempt" to your Application's ``/loginAttempts`` endpoint.
 
@@ -282,10 +342,16 @@ Now we have a user Account that can use your Application. But how do you authent
   .. literalinclude:: code/java/quickstart/authentication_attempt
       :language: java
 
-.. only:: dotnet
+.. only:: csharp or vbnet
 
-  .. literalinclude:: code/dotnet/quickstart/authentication_attempt
-      :language: csharp
+    .. only:: csharp
+
+        .. literalinclude:: code/csharp/quickstart/authentication_attempt.cs
+            :language: csharp
+
+    If the authentication attempt is successful, you'll get an ``IAuthenticationResult``, which contains a link to the Account details.
+
+    If the authentication attempt fails, a ``ResourceException`` will be thrown. The ``Message`` and ``DeveloperMessage`` properties of the exception will contain details about the authentication failure.
 
 .. only:: python
 
@@ -294,14 +360,18 @@ Now we have a user Account that can use your Application. But how do you authent
 
 .. only:: nodejs
 
-  .. literalinclude:: code/nodejs/quickstart/authentication_attempt 
+  .. literalinclude:: code/nodejs/quickstart/authentication_attempt
       :language: javascript
 
-If the authentication attempt fails, you will see an error response instead:
+.. there isn't always a response; in dotnet and java it's a thrown exception
 
-.. only:: rest 
+.. only:: not (csharp or vbnet)
 
-  .. code-block:: json 
+    If the authentication attempt fails, you will see an error response instead:
+
+.. only:: rest
+
+  .. code-block:: json
 
     {
       "status": 400,
@@ -320,11 +390,6 @@ If the authentication attempt fails, you will see an error response instead:
 
   .. literalinclude:: code/java/quickstart/authentication_attempt_error_result
       :language: java
-
-.. only:: dotnet
-
-  .. literalinclude:: code/dotnet/quickstart/authentication_attempt_error_result
-      :language: csharp
 
 .. only:: python
 
