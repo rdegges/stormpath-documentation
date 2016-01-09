@@ -50,6 +50,8 @@ Stormpath also can do a lot more (like :ref:`Groups <group-mgmt>`, :ref:`Multite
     1. Create a new Console Application project in Visual Studio.
     2. Install the Stormpath .NET SDK by running :code:`install-package Stormpath.SDK` in the Package Manager Console. If you prefer, you can also use the NuGet Package Manager to install the Stormpath.SDK package.
 
+    .. todo using/Import and async stuff?
+
 Let's get started!
 
 3.1. Retrieve Your Application
@@ -178,11 +180,18 @@ Before you can create user Accounts you'll need to retrieve your Stormpath Appli
         .. literalinclude:: code/csharp/quickstart/retrieve_your_application.cs
             :language: csharp
 
+    .. only:: vbnet
+
+        .. literalinclude:: code/vbnet/quickstart/retrieve_your_application.vb
+            :language: vbnet
+
     .. note::
 
         ``GetApplications()`` returns an ``IAsyncQueryable``, which represents a Stormpath collection resource that can be queried using LINQ-to-Stormpath. No network request is made to the Stormpath API until you call a method that enumerates the collection, such as ``SingleAsync()`` or ``ToListAsync()``.
 
     ``myApp`` is an ``IApplication`` object, which represents a Stormpath Application resource as a .NET type. We'll use this object to create a new user Account and then authenticate it.
+
+    .. todo Synchronously stuff?
 
 .. only:: python
 
@@ -266,6 +275,11 @@ Now that we've created an Application, let's create a user Account so someone ca
         .. literalinclude:: code/csharp/quickstart/create_an_account.cs
             :language: csharp
 
+    .. only:: vbnet
+
+        .. literalinclude:: code/vbnet/quickstart/create_an_account.vb
+            :language: vbnet
+
     ``CreateAccountAsync()`` sends a request to Stormpath and returns an ``IAccount`` (after being awaited). Like ``IApplication``, ``IAccount`` is the .NET type that represents a Stormpath Account resource.
 
 .. only:: python
@@ -348,6 +362,11 @@ Now we have a user Account that can use your Application. But how do you authent
 
         .. literalinclude:: code/csharp/quickstart/authentication_attempt.cs
             :language: csharp
+
+    .. only:: vbnet
+
+        .. literalinclude:: code/vbnet/quickstart/authentication_attempt.vb
+            :language: vbnet
 
     If the authentication attempt is successful, you'll get an ``IAuthenticationResult``, which contains a link to the Account details.
 
