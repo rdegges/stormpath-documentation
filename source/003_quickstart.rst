@@ -47,10 +47,46 @@ Stormpath also can do a lot more (like :ref:`Groups <group-mgmt>`, :ref:`Multite
 
     To set up your environment for this quickstart, follow these steps:
 
-    1. Create a new Console Application project in Visual Studio.
-    2. Install the Stormpath .NET SDK by running :code:`install-package Stormpath.SDK` in the Package Manager Console. If you prefer, you can also use the NuGet Package Manager to install the Stormpath.SDK package.
+    First, create a new Console Application project in Visual Studio. Install the Stormpath .NET SDK by running
 
-    .. todo using/Import and async stuff?
+        ``install-package Stormpath.SDK``
+
+    in the Package Manager Console. If you prefer, you can also use the NuGet Package Manager to install the Stormpath.SDK package.
+
+    Next, add these statements at the top of your code:
+
+        .. only:: csharp
+
+            .. literalinclude:: code/csharp/quickstart/using.cs
+                :language: csharp
+
+        .. only:: vbnet
+
+            .. literalinclude:: code/vbnet/quickstart/using.vb
+                :language: vbnet
+
+    Asynchronous and Synchronous Support
+    ------------------------------------
+
+    The Stormpath .NET SDK supports the `Task-based asynchronous <https://msdn.microsoft.com/en-us/library/hh873175(v=vs.110).aspx>`_ model by default. Every method that makes a network call ends in ``Async``, takes an optional ``CancellationToken`` parameter, and can be awaited.
+
+    The built-in Visual Studio Console Application template doesn't support making asynchronous calls, but that's easy to fix:
+
+        .. only:: csharp
+
+            .. literalinclude:: code/csharp/quickstart/async_fix.cs
+                :language: csharp
+
+        .. only:: vbnet
+
+            .. literalinclude:: code/vbnet/quickstart/async_fix.vb
+                :language: vbnet
+
+    The ``Stormpath.SDK.Sync`` namespace can be used in older applications or situations where synchronous access is required. This namespace provides a synchronous counterpart to each asynchronous method.
+
+    .. note::
+
+        The asynchronous API is preferred for newer applications. However, the methods available in ``Stormpath.SDK.Sync`` are **natively** synchronous - not just a blocking wrapper over the asynchronous API. These methods can be used safely, even from asynchronous applications.
 
 Let's get started!
 
@@ -189,9 +225,9 @@ Before you can create user Accounts you'll need to retrieve your Stormpath Appli
 
         ``GetApplications()`` returns an ``IAsyncQueryable``, which represents a Stormpath collection resource that can be queried using LINQ-to-Stormpath. No network request is made to the Stormpath API until you call a method that enumerates the collection, such as ``SingleAsync()`` or ``ToListAsync()``.
 
-    ``myApp`` is an ``IApplication`` object, which represents a Stormpath Application resource as a .NET type. We'll use this object to create a new user Account and then authenticate it.
+        **Tip**: If you're using the ``Stormpath.SDK.Sync`` namespace, call the ``Synchronously()`` method after calling ``GetApplications()``. Then use standard LINQ result operators like ``Single()`` to synchronously execute the query.
 
-    .. todo Synchronously stuff?
+    ``myApp`` is an ``IApplication`` object, which represents a Stormpath Application resource as a .NET type. We'll use this object to create a new user Account and then authenticate it.
 
 .. only:: python
 
