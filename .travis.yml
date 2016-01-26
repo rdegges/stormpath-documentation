@@ -8,13 +8,11 @@ script:
 - make html
 after_success:
 - CURRENT_HASH=`git rev-parse HEAD`
-- RELEASE_VERSION=`git tag | xargs -I@ git log --format=format:"%ai @%n" -1 @ | sort
-  | awk '{print $4}' | tail -n 1`
+- RELEASE_VERSION=`git tag | xargs -I@ git log --format=format:"%ai @%n" -1 @ | sort | awk '{print $4}' | tail -n 1`
 - RELEASE_HASH=`git rev-list $RELEASE_VERSION -n 1`
 - if [ "$CURRENT_HASH" = "$RELEASE_HASH"  ]; then export DEPLOY_DOCS=true; fi
 - test -z "$DEPLOY_DOCS" || git config --global user.email "evangelists@stormpath.com"
-- test -z "$DEPLOY_DOCS" || git config --global user.name "stormpath-documentation
-  Auto Doc Build"
+- test -z "$DEPLOY_DOCS" || git config --global user.name "stormpath-documentation Auto Doc Build"
 - test -z "$DEPLOY_DOCS" || git clone git@github.com:stormpath/stormpath.github.io.git
 - test -z "$DEPLOY_DOCS" || cd stormpath.github.io
 - test -z "$DEPLOY_DOCS" || git fetch origin source:source
@@ -36,6 +34,5 @@ after_success:
 - test -z "$DEPLOY_DOCS" || cd ..
 - test -z "$DEPLOY_DOCS" || rake deploy
 before_install:
-- openssl aes-256-cbc -K $encrypted_15c7e38b27fc_key -iv $encrypted_15c7e38b27fc_iv
-  -in stormpath_documentation_auto_doc_build.enc -out ~/.ssh/id_rsa -d
+- openssl aes-256-cbc -K $encrypted_15c7e38b27fc_key -iv $encrypted_15c7e38b27fc_iv -in stormpath_documentation_auto_doc_build.enc -out ~/.ssh/id_rsa -d
 - chmod 600 ~/.ssh/id_rsa
