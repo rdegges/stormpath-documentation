@@ -12,6 +12,7 @@ after_success:
   | awk '{print $4}' | tail -n 1`
 - RELEASE_HASH=`git rev-list $RELEASE_VERSION -n 1`
 - if [ "$CURRENT_HASH" = "$RELEASE_HASH"  ]; then export DEPLOY_DOCS=true; fi
+- echo "DEBUG: $DEPLOY_DOCS"
 - test -z "$DEPLOY_DOCS" || git config --global user.email "evangelists@stormpath.com"
 - test -z "$DEPLOY_DOCS" || git config --global user.name "stormpath-documentation
   Auto Doc Build"
