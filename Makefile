@@ -7,7 +7,7 @@ SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = build
 LANGUAGE      = rest
-LANGUAGES     = rest php java dotnet python node
+LANGUAGES_TO_BUILD = rest php java dotnet python node
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
