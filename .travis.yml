@@ -7,7 +7,6 @@ install:
 script:
 - make html
 after_success:
-- TEST=true
 - CURRENT_HASH=`git rev-parse HEAD`
 - RELEASE_VERSION=`git tag | xargs -I@ git log --format=format:"%ai @%n" -1 @ | sort
   | awk '{print $4}' | tail -n 1`
