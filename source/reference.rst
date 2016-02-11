@@ -813,48 +813,63 @@ When you sign up for Stormpath, a private data space is created for you. This sp
 Tenant Operations
 -----------------
 
+.. contents::
+    :local:
+    :depth: 2
+
+----
+
 Retrieve A Tenant 
 ^^^^^^^^^^^^^^^^^^
-    
-.. list-table::
-    :widths: 40 20 40
-    :header-rows: 1
 
-    * - Operation 
-      - Optional Parameters 
-      - Description
-    
-    * - GET /v1/tenants/current
-      - N/A
-      - Retrieves the Tenant associated with the current API key. The response will be a ``302 Redirect``. You will find the location of the Tenant in a Location header, although most REST libraries and web browsers will automatically issue a request for it.
-        
-    * - GET /v1/tenants/$TENANT_ID
-      - N/A 
-      - Retrieves the Tenant with the specified ID.
+GET /v1/tenants/current
+"""""""""""""""""""""""
+
+Retrieves the Tenant associated with the current API key. The response will be a ``302 Redirect``. You will find the location of the Tenant in a Location header, although most REST libraries and web browsers will automatically issue a request for it.
+
+**Optional Parameters:** 
+
+N/A
+
+GET /v1/tenants/$TENANT_ID
+""""""""""""""""""""""""""
+
+Retrieves the Tenant with the specified ID.
+
+**Optional Parameters:** 
+
+N/A
+
+----
     
 Using A Tenant for Look-Up 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is possible to retrieve other independent resources using the Tenant for look-up. 
 
-.. list-table::
-    :widths: 40 20 40
-    :header-rows: 1
+GET /v1/tenants/$TENANT_ID/$RESOURCE_TYPE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-    * - Operation 
-      - Optional Parameters 
-      - Description
-    
-    * - GET /v1/tenants/$TENANT_ID/$RESOURCE_TYPE
-      - :ref:`Pagination <about-pagination>`, :ref:`sorting <about-sorting>`
-      - Retrieves a collection of all of a Tenant's associated resources of the specified type. Possible resource types are: ``organizations``, ``applications``, ``directories``, ``accounts``, ``agents``, ``groups``, and ``idsites``. 
-        
-    * - GET /v1/tenants/$TENANT_ID/$RESOURCE_TYPE?(searchParams)
-      - :ref:`Pagination <about-pagination>`, :ref:`sorting <about-sorting>`, Search: :ref:`Filter <search-filter>`, :ref:`Attribute <search-attribute>`, :ref:`Datetime <search-datetime>`  
-      - Searches a collection of all of the Tenant's associated resources of the specified type. For more about Search, please see :ref:`here <about-search>`. Searchable collections associated with a Tenant are: ``customData``, ``organizations``, ``applications``, ``directories``, ``accounts``, ``agents``, ``groups``, and ``idsites``. 
+Retrieves a collection of all of a Tenant's associated resources of the specified type. Possible resource types are ``organizations``, ``applications``, ``directories``, ``accounts``, ``agents``, ``groups``, and ``idsites``.
+
+**Optional Parameters**
+
+- :ref:`Pagination <about-pagination>`
+- :ref:`Sorting <about-sorting>`
+
+GET /v1/tenants/$TENANT_ID/$RESOURCE_TYPE?(searchParams)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Searches a collection of all of the Tenant's associated resources of the specified type. For more about Search, please see :ref:`here <about-search>`. Searchable collections associated with a Tenant are: ``customData``, ``organizations``, ``applications``, ``directories``, ``accounts``, ``agents``, ``groups``, and ``idsites``.
+
+**Optional Parameters** 
+
+- :ref:`Pagination <about-pagination>`
+- :ref:`Sorting <about-sorting>`
+- Search by :ref:`Filter <search-filter>`, :ref:`Attribute <search-attribute>`, :ref:`Datetime <search-datetime>`  
 
 Example Queries
-"""""""""""""""
++++++++++++++++
 
 **Retrieving a Collection Associated with a Tenant**
 
