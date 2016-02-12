@@ -700,6 +700,82 @@ When you sign up for Stormpath, a private data space is created for you. This sp
 
 **Tenant Attributes**
 
+- :ref:`href <tenant-href>`
+- :ref:`name <tenant-name>`
+- :ref:`key <tenant-key>`
+- :ref:`createdAt <tenant-createdAt>`
+- modifiedAt
+- customData
+- organizations
+- applications
+- directories 
+- accounts 
+- agents
+- groups
+- idSites 
+
+**Tenant Example**
+
+.. code-block:: json 
+
+    {
+      "href": "https://api.stormpath.com/v1/tenants/1gBTncWsp2ObQGgeXAMPLE",
+      "name": "tenantName",
+      "key": "tenantKey",
+      "createdAt": "2015-08-18T20:46:36.061Z",
+      "modifiedAt": "2015-08-18T20:46:36.061Z",
+      "customData": {
+        "href": "https://api.stormpath.com/v1/tenants/1gBTncWsp2ObQGgeXAMPLE/customData"
+      },
+      "organizations": {
+        "href": "https://api.stormpath.com/v1/tenants/1gBTncWsp2ObQGgeXAMPLE/organizations"
+      },
+      "applications": {
+        "href": "https://api.stormpath.com/v1/tenants/1gBTncWsp2ObQGgeXAMPLE/applications"
+      },
+      "directories": {
+        "href": "https://api.stormpath.com/v1/tenants/1gBTncWsp2ObQGgeXAMPLE/directories"
+      },
+      "accounts": {
+        "href": "https://api.stormpath.com/v1/tenants/1gBTncWsp2ObQGgeXAMPLE/accounts"
+      },
+      "agents": {
+        "href": "https://api.stormpath.com/v1/tenants/1gBTncWsp2ObQGgeXAMPLE/agents"
+      },
+      "groups": {
+        "href": "https://api.stormpath.com/v1/tenants/1gBTncWsp2ObQGgeXAMPLE/groups"
+      },
+      "idSites": {
+        "href": "https://api.stormpath.com/v1/tenants/1gBTncWsp2ObQGgeXAMPLE/idSites"
+      }
+    }
+
+**Tenant Attribute Details**
+
+.. _tenant-href:
+
+**href** (Link)
+
+The resource's fully qualified location URL.
+
+.. _tenant-name:
+
+**name** (String)
+
+Name of the Tenant, by default this is the same as the key, but can be modified. It can be between 1 and 255 characters long.
+
+.. _tenant-key:
+
+**key** (String)
+
+Human-readable unique key. This key is unique and assigned by Stormpath. If you would like to change it, please contact Stormpath. The key must have: no whitespace, lower-case a-z and dash ‘–’ characters only, and it cannot start or end with a dash ‘–’ character.
+
+.. _tenant-createdAt:
+
+**createdAt**
+
+Indicates when this resource was created as an ISO-8601 Datetime.
+
 .. list-table::
     :widths: 15 10 20 60
     :header-rows: 1
