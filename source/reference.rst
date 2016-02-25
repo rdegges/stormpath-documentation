@@ -390,12 +390,12 @@ A request for a Collection Resource can contain an optional ``orderBy`` query pa
 
 For example, a sorted request (where %2C is the URL encoding for the comma character) might look like this:
 
-  .. code-block:: bash
+.. code-block:: bash
 
-    curl --request GET \
-    --user $SP_API_KEY_ID:$SP_API_KEY_SECRET \
-    --header 'content-type: application/json' \
-    --url "https://api.stormpath.com/v1/accounts?orderBy=orderStatement1%2CorderStatement2%2C...%2CorderStatementN"
+  curl --request GET \
+  --user $SP_API_KEY_ID:$SP_API_KEY_SECRET \
+  --header 'content-type: application/json' \
+  --url "https://api.stormpath.com/v1/accounts?orderBy=orderStatement1%2CorderStatement2%2C...%2CorderStatementN"
 
 When URL-decoded, the URL looks like this::
 
@@ -437,11 +437,12 @@ Search
 
 Search in the contest of the Stormpath REST API means retrieving only the members of a Collection that match a specific query. You search by sending a GET for a Collection, along with query parameters, and Stormpath returns only the resources from the Collection that match your parameters. 
 
-There are currently three different types of searches that might be performed: 
+There are currently four different types of searches that might be performed: 
 
 #. A generic :ref:`filter-based search <search-filter>`.
 #. A more targeted :ref:`attribute-based search <search-attribute>`. 
 #. An even more targeted kind of attribute search, the :ref:`Datetime <search-datetime>` search.
+#. A search of :ref:`customData <search-customdata>`.
 
 The primary difference between the first two is that the **filter search** matches across all attributes, while **attribute search** looks only for matches in a specified attribute. The **Datetime search** is a kind of attribute search which is used to find resources based on the time they were created or modified. All three options support result :ref:`sorting <about-sorting>`, :ref:`pagination<about-pagination>`, and :ref:`link expansion <about-links>`.
 
@@ -452,16 +453,16 @@ Filter Search
 
 A filter search consists of specifying a query parameter ``q`` and a corresponding search value on a Collection Resource URL::
 
-    /v1/$CONTAINER_TYPE/$CONTAINER_ID/$RESOURCE_TYPE?q=some+criteria
+  /v1/$CONTAINER_TYPE/$CONTAINER_ID/$RESOURCE_TYPE?q=some+criteria
 
 For example, to search across an Application’s Accounts for any Account that has a :ref:`searchable attribute <searchable-attributes>` containing the text "Joe":
     
-    .. code-block:: bash
+.. code-block:: bash
 
-      curl --request GET \
-      --user $SP_API_KEY_ID:$SP_API_KEY_SECRET \
-      --header 'content-type: application/json' \
-      --url "https://api.stormpath.com/v1/applications/$APPLICATION_ID/accounts?q=Joe"
+  curl --request GET \
+  --user $SP_API_KEY_ID:$SP_API_KEY_SECRET \
+  --header 'content-type: application/json' \
+  --url "https://api.stormpath.com/v1/applications/$APPLICATION_ID/accounts?q=Joe"
 
 Matching Logic
 ++++++++++++++
@@ -470,12 +471,12 @@ Stormpath will perform a case-insensitive matching query on all viewable attribu
 
 So the following query:
   
-  .. code-block:: bash
+.. code-block:: bash
 
-      curl --request GET \
-      --user $SP_API_KEY_ID:$SP_API_KEY_SECRET \
-      --header 'content-type: application/json' \
-      --url "https://api.stormpath.com/v1/groups/1ORBsz2iCNpV8yJExaMPLe/accounts?q=Joe"
+    curl --request GET \
+    --user $SP_API_KEY_ID:$SP_API_KEY_SECRET \
+    --header 'content-type: application/json' \
+    --url "https://api.stormpath.com/v1/groups/1ORBsz2iCNpV8yJExaMPLe/accounts?q=Joe"
 
 Returns all Accounts where:
 
@@ -487,10 +488,10 @@ Returns all Accounts where:
 
 It may help to think about each attribute comparison as similar to a ‘like’ operation in a traditional relational database context. For example, if SQL was used to execute the query, it might look like this::
 
-    select * from my_tenant_accounts where
-        (lower(givenName) like '%joe%' OR
-         lower(middlename) like '%joe%' OR
-         lower(email) like '%joe%' OR ... );
+  select * from my_tenant_accounts where
+      (lower(givenName) like '%joe%' OR
+       lower(middlename) like '%joe%' OR
+       lower(email) like '%joe%' OR ... );
 
 .. _search-attribute:
 
@@ -605,18 +606,29 @@ Stormpath stores the datetime in `ISO 8601 <http://www.w3.org/TR/NOTE-datetime>`
 
     Omitting the beginning or ending date is valid for requests. Omitting the begin datetime range [,ISO-8601-END-DATETIME] would include all resources created or modified before the end datetime. Omitting the end datetime range [ISO-8601-BEGIN-DATETIME,] would include all resources created or modified after the the begin datetime.
 
-As an example, if you want wanted to get all Accounts created between January 12, 2015 and January 14, 2015 your query would look like this::
+As an example, if you want wanted to get all Accounts created between January 12, 2015 and January 14, 2015 your query would look like this:
 
-    /v1/applications/$APPLICATION_ID/accounts?createdAt=[2015-01-12, 2015-01-14]
+.. code-block:: bash
+
+  curl --request GET \
+  --user $SP_API_KEY_ID:$SP_API_KEY_SECRET \
+  --header 'content-type: application/json' \
+  --url 'https://api.stormpath.com/v1/applications/$APPLICATION_ID/accounts?createdAt=[2015-01-12, 2015-01-14]'
+    
 
 The response would be a Collection of Accounts created between the two days. 
 
 Exclusion vs Inclusion
 ++++++++++++++++++++++
 
-The square brackets [] denote **inclusion**, but ``createdAt`` and ``modifiedAt`` also support **exclusion** with parentheses (). For example, if you wanted to get all accounts created between Jan 12, 2015 and Jan 14, 2015 not including the 14th, your request would look like this::
+The square brackets [] denote **inclusion**, but ``createdAt`` and ``modifiedAt`` also support **exclusion** with parentheses (). For example, if you wanted to get all accounts created between Jan 12, 2015 and Jan 14, 2015 not including the 14th, your request would look like this:
 
-    v1/applications/$APPLICATION_ID/accounts?createdAt=[2015-01-12, 2015-01-14)
+.. code-block:: bash
+
+  curl --request GET \
+  --user $SP_API_KEY_ID:$SP_API_KEY_SECRET \
+  --header 'content-type: application/json' \
+  --url 'https://api.stormpath.com/v1/applications/$APPLICATION_ID/accounts?createdAt=[2015-01-12, 2015-01-14)'
 
 Precision
 +++++++++
@@ -625,32 +637,88 @@ The precision of your query is controlled by the granularity of the `ISO 8601 <h
 
 For example, if you need precision in seconds::
 
-    ?createdAt=[2015-01-12T12:00:00, 2015-01-12T12:00:05]
+  ?createdAt=[2015-01-12T12:00:00, 2015-01-12T12:00:05]
 
 And, if you need precision in years::
 
-    ?createdAt=[2014, 2015]
+  ?createdAt=[2014, 2015]
 
 Shorthand
 +++++++++
 
 It is also possible to use shorthand with ranges of ``createdAt`` and ``modifiedAt`` to simplify the query parameter. This is useful for queries where the range can be encapsulated in a particular year, month, day, hour, minute or second.
 
-For example if you wanted all accounts created in Jan 2015, instead of::
+For example if you wanted all accounts created in Jan 2015, instead of this::
 
-    ?createdAt=[2015-01-01T00:00:00.000Z,2015-02-01T00:00:00.000)
+  ?createdAt=[2015-01-01T00:00:00.000Z,2015-02-01T00:00:00.000)
 
 You could just write::
 
-    ?createdAt=2015-01
+  ?createdAt=2015-01
 
 And if you want all Accounts modified on the 12th hour UTC on Feb 03, 2015, instead of this query::
 
-    ?modifiedAt=[2015-02-03T12:00:00.000Z, 2015-02-04T13:00:00.000)
+  ?modifiedAt=[2015-02-03T12:00:00.000Z, 2015-02-04T13:00:00.000)
 
 You can simply write::
 
-    ?modifiedAt=2015-02-03T12
+  ?modifiedAt=2015-02-03T12
+
+.. _search-customdata:
+
+Custom Data Search
+""""""""""""""""""
+
+It is also possible to search a collection's customData. This means that you send a query query to a collection:
+
+``?customData=customData.{key}={value}``
+
+You will receive back an array of resources that contain that value in their customData.
+
+Currently, the following resources' customData can be searched:
+
+- Accounts
+
+Searches can be performed on the following endpoints:
+
+- ``/v1/directory/$DIRECTORY_ID/accounts``
+
+As an example, if we know that Accounts have a ``favoriteColor`` key in their customData, we could find all Accounts in a Directory that have ``favoriteColor`` set to ``white`` with the following query:
+
+.. code-block:: bash
+
+  curl --request GET \
+  --user $SP_API_KEY_ID:$SP_API_KEY_SECRET \
+  --header 'content-type: application/json' \
+  --url 'https://api.stormpath.com/v1/directories/2SKhstu8Plaekcai8lghrp/accounts?customData.favoriteColor=white'
+
+Matching Logic
+++++++++++++++
+
+- A customData parameter value triggers one of four types of matching criteria:
+   
+   #. No asterisk at the beginning or end of the value indicates a direct match.
+   #. An asterisk only at the beginning of the value indicates that value is at the end.
+   #. An asterisk only at the end of the value indicates that the value is at the beginning.
+   #. An asterisk at the end AND at the beginning of the value indicates the value is contained in the string.
+
+.. note ::
+
+  Just like with Filter search, queries are case-insensitive. 
+
+So if instead of finding all Accounts that had customData where ``favoriteColor=white`` we wanted to find all Accounts where ``favoriteColor`` was any of the colors starting with "b", we would simply change the query to::
+
+  ?customData.favoriteColor=b*
+
+Since we would actually want to see what the values were, we'd also throw in a :ref:`link expansion <about-links>` parameter as well:
+
+  ?customData.favoriteColor=b*&expand=customData
+
+Exclusion vs Inclusion
+++++++++++++++++++++++
+
+Precision
++++++++++
 
 .. _about-links:
 

@@ -521,6 +521,8 @@ This information can also be appended as part of the initial Account creation pa
 
 For more information about the customData resource, please see the `customData section <http://docs.stormpath.com/rest/product-guide/#custom-data>`_ of the REST API Product Guide .
 
+.. _howto-search-accounts:
+
 4.3. How to Search Accounts
 ===========================
 
@@ -688,6 +690,13 @@ Find All Accounts in a Directory That Were Created on a Particular Day
           }
       ]
   }
+
+4.3.2. Searching for Accounts with customData
+---------------------------------------------
+
+.. todo::
+
+  This.
 
 .. _managing-account-pwd:
 
